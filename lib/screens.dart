@@ -60,12 +60,20 @@ class _ShopShellState extends State<ShopShell> {
         titleSpacing: 18,
         title: InkWell(
           onTap: () => setState(() => _tab = 0),
-          child: const Text('AJIOMART',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 1.9,
-                  color: _ink)),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(7),
+              child: Image.asset('assets/images/ajiomart-logo.png',
+                  width: 30, height: 30, fit: BoxFit.cover),
+            ),
+            const SizedBox(width: 10),
+            const Text('AJIOMART',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.9,
+                    color: _ink)),
+          ]),
         ),
         actions: [
           IconButton(
