@@ -335,7 +335,9 @@ class _ProductGrid extends StatelessWidget {
           crossAxisCount: 2,
           crossAxisSpacing: 12,
           mainAxisSpacing: 13,
-          childAspectRatio: .56),
+          // Leave enough height for a two-line product name and the price
+          // below the fixed-ratio image on narrow Android screens.
+          childAspectRatio: .50),
       itemBuilder: (_, index) => _ProductCard(products[index]),
     );
   }
@@ -3062,6 +3064,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String? _selectedColor;
   String? _selectedSize;
   int _image = 0;
+  bool _addingToBag = false;
 
   @override
   Widget build(BuildContext context) {
@@ -3084,6 +3087,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final selectedColor = _selectedColor ?? colors.first;
     final selectedSize = _selectedSize ?? sizes.first;
     final isSaved = api.wishlistIds.contains(product.id);
+    final selectedVariantInBag = api.cart.any((line) =>
+        line.product.id == product.id &&
+        line.color == selectedColor &&
+        line.size == selectedSize);
     return Scaffold(
       appBar: AppBar(title: const Text('Product details'), actions: [
         IconButton(
@@ -3191,9 +3198,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       fontWeight: FontWeight.w700)),
               const SizedBox(height: 16),
               FilledButton.icon(
-                onPressed: product.stock <= 0
+                onPressed: product.stock <= 0 || _addingToBag
                     ? null
                     : () async {
+                        if (selectedVariantInBag) {
+                          await Navigator.pushNamed(context, '/cart');
+                          return;
+                        }
                         if (api.user == null) {
                           await Navigator.pushNamed(context, '/auth');
                           if (!context.mounted || api.user == null) return;
@@ -3205,14 +3216,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           await Navigator.pushNamed(context, '/cart');
                           return;
                         }
+                        setState(() => _addingToBag = true);
                         try {
                           await api.addToCart(product,
                               color: selectedColor, size: selectedSize);
                           if (context.mounted) {
+                            setState(() => _addingToBag = false);
                             _notice(context, 'Added to your Ajiomart bag.');
                           }
                         } catch (error) {
                           if (context.mounted) {
+                            setState(() => _addingToBag = false);
                             _notice(
                                 context,
                                 error
@@ -3221,8 +3235,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           }
                         }
                       },
-                icon: const Icon(Icons.shopping_bag_outlined),
-                label: Text(product.stock > 0 ? 'Add to bag' : 'Sold out'),
+                icon: _addingToBag
+                    ? const SizedBox.square(
+                        dimension: 20,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white),
+                      )
+                    : Icon(selectedVariantInBag
+                        ? Icons.shopping_bag
+                        : Icons.shopping_bag_outlined),
+                label: Text(_addingToBag
+                    ? 'Adding…'
+                    : product.stock <= 0
+                        ? 'Sold out'
+                        : selectedVariantInBag
+                            ? 'Go to bag'
+                            : 'Add to bag'),
               ),
               const SizedBox(height: 9),
               OutlinedButton.icon(
