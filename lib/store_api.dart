@@ -22,6 +22,7 @@ class AjiStoreApi extends ChangeNotifier {
   List<CartLine> cart = [];
   Set<String> wishlistIds = {};
   bool loading = true;
+  bool initializationComplete = false;
   bool productsLoading = false;
   bool cartLoading = false;
   bool ordersLoading = false;
@@ -33,12 +34,20 @@ class AjiStoreApi extends ChangeNotifier {
       products.where((p) => wishlistIds.contains(p.id)).toList();
 
   Future<void> initialize() async {
-    _preferences = await SharedPreferences.getInstance();
-    wishlistIds =
-        (_preferences?.getStringList('ajiomart-wishlist') ?? []).toSet();
-    _authSubscription =
-        client.auth.onAuthStateChange.listen((_) => _loadUser());
-    await _loadUser();
+    try {
+      _preferences = await SharedPreferences.getInstance();
+      wishlistIds =
+          (_preferences?.getStringList('ajiomart-wishlist') ?? []).toSet();
+      _authSubscription =
+          client.auth.onAuthStateChange.listen((_) => _loadUser());
+      await _loadUser();
+    } catch (e) {
+      error = _friendlyError(e);
+      loading = false;
+    } finally {
+      initializationComplete = true;
+      notifyListeners();
+    }
   }
 
   Future<void> _loadUser() async {
