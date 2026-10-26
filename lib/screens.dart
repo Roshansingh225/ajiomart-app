@@ -1813,26 +1813,41 @@ class _AccountAction extends StatelessWidget {
 
 Future<void> _confirmDeleteAccount(
     BuildContext context, AjiStoreApi api) async {
+  final user = api.user;
+  if (user == null) return;
   final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-            title: const Text('Delete your account?'),
+            title: const Text('Request account deletion?'),
             content: const Text(
-                'This signs you out. Permanent Supabase account deletion requires a server-side admin function, just like the website.'),
+                'We will open an email addressed to Ajiomart support. Send it from your registered email address so the team can verify and process your account deletion request.'),
             actions: [
               TextButton(
                   onPressed: () => Navigator.pop(dialogContext, false),
                   child: const Text('Cancel')),
               FilledButton(
                   onPressed: () => Navigator.pop(dialogContext, true),
-                  child: const Text('Continue'))
+                  child: const Text('Email support'))
             ],
           ));
   if (confirmed == true) {
-    await api.deleteAccountSession();
-    if (context.mounted) {
+    final uri = Uri(
+      scheme: 'mailto',
+      path: 'care@ajiomart.com',
+      queryParameters: {
+        'subject': 'Ajiomart account deletion request',
+        'body': 'Please delete my Ajiomart account and associated personal data.\n\n'
+            'Registered email: ${user.email}\n'
+            'Account reference: ${user.id}\n',
+      },
+    );
+    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (context.mounted && !launched) {
       _notice(context,
-          'You have been signed out. Contact support for permanent account deletion.');
+          'Could not open your email app. Write to care@ajiomart.com to request deletion.');
+    } else if (context.mounted) {
+      _notice(context,
+          'Review and send the email to submit your account deletion request.');
     }
   }
 }
@@ -2150,32 +2165,63 @@ class PrivacyScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Privacy policy')),
       body: ListView(
           padding: const EdgeInsets.fromLTRB(20, 18, 20, 30),
-          children: const [
+          children: [
             _Eyebrow('Ajiomart'),
             SizedBox(height: 6),
             Text('Your privacy matters.',
                 style: TextStyle(
                     color: _ink, fontSize: 27, fontWeight: FontWeight.w700)),
             SizedBox(height: 14),
-            Text(
-                'Ajiomart uses the information you provide to manage your account, keep your cart and wishlist available, process orders, arrange delivery, and help with customer support. Account and order data are stored in Supabase. Product images are served from Supabase Storage.',
+            const Text(
+                'This policy applies to the Ajiomart shopping app. Ajiomart uses your name, email, phone number, delivery address, cart, orders, payment status and references, courier tracking, and support messages to manage your account, take orders and payments, arrange delivery, and provide support. Postal codes are sent to Pincode API (api.pincodeapi.in) when you request a delivery-area lookup.',
                 style: TextStyle(color: _muted, height: 1.6)),
             SizedBox(height: 16),
-            Text('Payments',
+            Text('Service providers and payments',
                 style: TextStyle(
                     color: _ink, fontWeight: FontWeight.w800, fontSize: 16)),
             SizedBox(height: 5),
-            Text(
-                'Online payments are processed by Razorpay. Ajiomart uses its secured server functions to verify payment details before confirming an order. The app does not store card or UPI credentials.',
+            const Text(
+                'Supabase stores account, cart, order, and product-image data. Razorpay and your payment provider process online payments; Ajiomart receives payment status and transaction references and does not store card, UPI, or banking credentials. Delhivery receives the recipient name, phone number, delivery address, and parcel details to ship an order. If you choose WhatsApp support, your message is handled by WhatsApp. Each provider processes information under its own privacy terms.',
                 style: TextStyle(color: _muted, height: 1.6)),
             SizedBox(height: 16),
-            Text('Delivery and account requests',
+            Text('Data storage and retention',
                 style: TextStyle(
                     color: _ink, fontWeight: FontWeight.w800, fontSize: 16)),
             SizedBox(height: 5),
-            Text(
-                'Shipping details are shared with the courier to deliver your order. You can sign out from your account screen. Permanent account deletion requires a server-side deletion service; contact Ajiomart support to request it.',
+            const Text(
+                'Wishlist preferences are stored locally on your device. Account, cart, and order information are stored in Supabase and protected with access controls. We keep order records as needed to fulfil orders, assist customers, and meet legal or accounting requirements.',
                 style: TextStyle(color: _muted, height: 1.6)),
+            SizedBox(height: 16),
+            Text('Account and data deletion',
+                style: TextStyle(
+                    color: _ink, fontWeight: FontWeight.w800, fontSize: 16)),
+            SizedBox(height: 5),
+            const Text(
+                'To request deletion of your Ajiomart account and associated personal data, use Delete account in your account screen or email care@ajiomart.com from your registered email address. Include your account email so support can verify the request. You can send the request even if you no longer have the app installed. Order records may be retained where required for legal or accounting purposes.',
+                style: TextStyle(color: _muted, height: 1.6)),
+            const SizedBox(height: 8),
+            TextButton.icon(
+                onPressed: () => launchUrl(
+                  Uri(
+                    scheme: 'mailto',
+                    path: 'care@ajiomart.com',
+                    queryParameters: {
+                      'subject': 'Ajiomart account deletion request',
+                    },
+                  ),
+                  mode: LaunchMode.externalApplication,
+                ),
+                icon: const Icon(Icons.mail_outline_rounded),
+                label: const Text('Email Ajiomart support')),
+            const SizedBox(height: 4),
+            TextButton.icon(
+                onPressed: () => launchUrl(
+                  Uri.parse(
+                      'https://roshansingh225.github.io/ajiomart-app/privacy.html'),
+                  mode: LaunchMode.externalApplication,
+                ),
+                icon: const Icon(Icons.open_in_new_rounded),
+                label: const Text('Read the full privacy policy online')),
             SizedBox(height: 16),
             Text('Data protection',
                 style: TextStyle(

@@ -224,10 +224,6 @@ class AjiStoreApi extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> deleteAccountSession() async {
-    await signOut();
-  }
-
   Future<void> toggleWishlist(String productId) async {
     if (wishlistIds.contains(productId)) {
       wishlistIds.remove(productId);
