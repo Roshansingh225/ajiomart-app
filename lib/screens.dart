@@ -512,7 +512,7 @@ class HomeTab extends StatelessWidget {
             child: SizedBox(
                 height: 170,
                 child: Stack(fit: StackFit.expand, children: [
-                  Image.asset('assets/images/ajiomart-colour-campaign.jpg',
+                  Image.asset('assets/images/ajiomart-brand-story.jpg',
                       fit: BoxFit.cover),
                   const DecoratedBox(
                       decoration: BoxDecoration(
@@ -530,13 +530,10 @@ class HomeTab extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _Eyebrow('Made for the everyday'),
-                                    SizedBox(height: 7),
-                                    Text(
-                                        'Your next favourite is closer than you think.',
+                                    Text('Beauty, in your own rhythm.',
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 21,
+                                            fontSize: 22,
                                             height: 1.2,
                                             fontWeight: FontWeight.w700)),
                                   ])))),
