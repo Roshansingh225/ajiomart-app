@@ -12,7 +12,7 @@ flutter run
 ## Google Play release
 
 - Android package name: `com.ajiomart.mobile`
-- The store listing privacy policy is in `docs/privacy.html`. After GitHub Pages is enabled for the `main` branch and `/docs` folder, its URL is `https://roshansingh225.github.io/ajiomart-app/privacy.html`.
+- The store listing privacy policy is in `docs/privacy.html` and is published from the `main` branch's `/docs` folder at `https://roshansingh225.github.io/ajiomart-app/privacy.html`.
 - Build the signed Play bundle with `flutter build appbundle --release`. Release signing reads `android/key.properties`, which is intentionally ignored by Git. Keep that file and the referenced upload keystore backed up securely; never commit either one.
 
 The app has the Ajiomart Supabase URL and publishable key configured as defaults. To point a build at another Supabase project, pass the client-safe values as Dart defines:
