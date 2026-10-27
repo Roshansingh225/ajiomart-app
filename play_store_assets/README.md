@@ -6,3 +6,8 @@
 - `store-listing-copy.txt`: paste-ready app name, short and full descriptions, and privacy/deletion links with character counts.
 
 Phone screenshot order: Home, Shop, Product details, Wishlist, Bag.
+
+- `tablet-7-inch/`: two real emulator captures at 675 x 1200 (9:16), each under the 8 MB limit.
+- `tablet-10-inch/`: two real emulator captures at 1200 x 2133 (9:16), each under the 8 MB limit and above the 1080 px minimum on both sides.
+
+Tablet screenshot order: Home, Shop.
