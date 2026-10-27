@@ -1,0 +1,25 @@
+APP NAME (8/30)
+Ajiomart
+
+SHORT DESCRIPTION (70/80)
+Shop fashion, beauty and accessories. Save favourites and view orders.
+
+FULL DESCRIPTION (807/4000)
+Ajiomart brings fashion, beauty and lifestyle finds together in one easy shopping app. Explore clothing, handbags, skincare, makeup, fragrance and more.
+
+Browse the collection, search by product name or category, and use the available filters to find what you are looking for. Open a product to view photos, pricing, available colours or shades, sizes and stock details.
+
+Save favourites to your wishlist and add a selected variant to your bag. Sign in to continue to checkout. Choose online payment or cash on delivery where available, then check your order history for status updates.
+
+Need help? Contact Ajiomart support from the app, or use the Style Assistant for suggestions from the collection.
+
+Product selection, availability, payment methods and delivery options can vary by item and service area.
+
+DEFAULT LANGUAGE
+English (India) – en-IN
+
+PRIVACY POLICY URL
+https://roshansingh225.github.io/ajiomart-app/privacy.html
+
+ACCOUNT DELETION URL
+https://roshansingh225.github.io/ajiomart-app/privacy.html#account-and-data-deletion
