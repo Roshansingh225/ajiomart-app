@@ -20,8 +20,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.ajiomart.mobile"
-        minSdk = flutter.minSdkVersion
+        applicationId = "com.ajiomart.ajiomart_app"
+        minSdk = 24
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
